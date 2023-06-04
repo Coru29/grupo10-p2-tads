@@ -162,4 +162,43 @@ class TreeBSTTest {
     }
 
 
+    @Test
+    void countLeaf() {
+        TreeBST<Integer, String> bst = new TreeBST<>();
+
+        // Insertamos datos en el árbol
+        bst.insert(8, "Node1");
+        bst.insert(3, "Node2");
+        bst.insert(10, "Node3");
+        bst.insert(1, "Node4");
+        bst.insert(6, "Node5");
+        bst.insert(14, "Node6");
+        bst.insert(4, "Node7");
+        bst.insert(7, "Node8");
+        bst.insert(13, "Node9");
+
+        // En este árbol, los nodos con claves 1, 4, 7 y 13 son hojas.
+        assertEquals(4, bst.countLeaf());
+    }
+
+    @Test
+    void countCompleteElements() {
+        TreeBST<Integer, String> bst = new TreeBST<>();
+
+        // Insertamos datos en el árbol
+        bst.insert(8, "Node1");
+        bst.insert(3, "Node2");
+        bst.insert(10, "Node3");
+        bst.insert(1, "Node4");
+        bst.insert(6, "Node5");
+        bst.insert(14, "Node6");
+        bst.insert(4, "Node7");
+        bst.insert(7, "Node8");
+        bst.insert(13, "Node9");
+
+        // En este árbol, los nodos con claves 8, 3 y 10 son nodos completos (tienen ambos hijos).
+        assertEquals(3, bst.countCompleteElements());
+    }
+
+
 }
