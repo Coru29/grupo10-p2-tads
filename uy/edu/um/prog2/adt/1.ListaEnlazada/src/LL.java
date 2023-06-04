@@ -6,78 +6,113 @@ public class LL<T extends  Comparable<T>> implements Lista<T>{
 
     @Override
     public void add(T value) {
-
         NodeLinkedList<T> nuevoNodo = new NodeLinkedList<>();
         nuevoNodo.value = value;
 
-        //si la lista esta vacia
-        nuevoNodo.next = null;
-        if(head == null){
+        // si la lista está vacía
+        if (head == null) {
             head = nuevoNodo;
-        }
-        //si la lista no esta vacia
-        else{
-            //mientras que no este parado en el ultimo sigo avanzando
+        } else {
+            // si la lista no está vacía
+            // mientras que no esté parado en el último, sigo avanzando
             NodeLinkedList<T> tempNodeLinkedList = head;
-            while (tempNodeLinkedList.next != null){
+            while (tempNodeLinkedList.next != null) {
                 tempNodeLinkedList = tempNodeLinkedList.next;
             }
-            //una vez ya estoy en el ulimo, en el next pongo el q quiero poner
+            // una vez ya estoy en el último, en el next pongo el que quiero poner
             tempNodeLinkedList.next = nuevoNodo;
         }
-
     }
+
 
     @Override
     public void remove(int position) {
-        NodeLinkedList<T> tempNodeLinkedList = head;
-
-        //recorro la lista y me paro en el anterior al que quiero eliminar
-        for(int i = 0; i < position-1; i++){
-            tempNodeLinkedList = tempNodeLinkedList.next;
+        if (position < 0) {
+            throw new IllegalArgumentException("La posición no puede ser negativa.");
         }
-        //el puntero del anterior pasa a apunutar al proximo del q quiero elinimar, entonces lo pasa de largo
-        tempNodeLinkedList.next = tempNodeLinkedList.next.next;
 
-    }
-
-    @Override
-    public void get(int position) {
-        NodeLinkedList<T> tempNodeLinkedList = head;
-
-        //recorro la lista y me paro en el anterior al que quiero eliminar
-        for(int i = 0; i != position; i++){
-            tempNodeLinkedList = tempNodeLinkedList.next;
+        if (head == null) {
+            throw new IllegalStateException("No se puede eliminar de una lista vacía.");
         }
-        System.out.println("en el indice " +position+ " esta el valor " + tempNodeLinkedList.value);
-    }
 
-    @Override
-    public void find(T value){
+        if (position == 0) {
+            head = head.next;
+            return;
+        }
+
         NodeLinkedList<T> tempNodeLinkedList = head;
-
-        if (tempNodeLinkedList.value == value) System.out.println("el valor "+value +" es el head!");
-
-        else{
-            int i = 0;
-            boolean esta = false;
-            while (tempNodeLinkedList.next != null){
-
-                if (tempNodeLinkedList.value == value){
-                    System.out.println("el valor " +value+ " esta en la posicion " + i);
-                    esta = true;
-                    break;
-                }else{
-                    tempNodeLinkedList = tempNodeLinkedList.next;
-                    i++;
-                }
+        for (int i = 0; i < position - 1; i++) {
+            if (tempNodeLinkedList.next == null) {
+                throw new IndexOutOfBoundsException("La posición está fuera de los límites de la lista.");
             }
-            if (!esta) System.out.println("el valor " + value+ " no esta! :(");
-
-
+            tempNodeLinkedList = tempNodeLinkedList.next;
         }
 
+        if (tempNodeLinkedList.next == null) {
+            throw new IndexOutOfBoundsException("La posición está fuera de los límites de la lista.");
+        }
+
+        tempNodeLinkedList.next = tempNodeLinkedList.next.next;
     }
+
+
+
+
+    @Override
+    public T get(int position) {
+        if (position < 0) {
+            throw new IllegalArgumentException("La posición no puede ser negativa.");
+        }
+
+        if (head == null) {
+            throw new IllegalStateException("No se puede obtener un elemento de una lista vacía.");
+        }
+
+        NodeLinkedList<T> tempNodeLinkedList = head;
+        for (int i = 0; i < position; i++) {
+            if (tempNodeLinkedList.next == null) {
+                throw new IndexOutOfBoundsException("La posición está fuera de los límites de la lista.");
+            }
+            tempNodeLinkedList = tempNodeLinkedList.next;
+        }
+
+        return tempNodeLinkedList.value;
+    }
+
+    public int size() {
+        int size = 0;
+        NodeLinkedList<T> current = head;
+
+        while (current != null) {
+            size++;
+            current = current.next;
+        }
+
+        return size;
+    }
+
+
+
+    @Override
+    public int find(T value){
+        NodeLinkedList<T> tempNodeLinkedList = head;
+        int i = 0;
+
+        while (tempNodeLinkedList != null) {
+            if (tempNodeLinkedList.value.equals(value)) {
+                System.out.println("El valor " + value + " está en la posición " + i);
+                return i;
+            }
+
+            tempNodeLinkedList = tempNodeLinkedList.next;
+            i++;
+        }
+
+        System.out.println("El valor " + value + " no está! :(");
+        return -1;
+    }
+
+
 
     @Override
     public void addFirst(T value) {
@@ -90,48 +125,50 @@ public class LL<T extends  Comparable<T>> implements Lista<T>{
 
     @Override
     public void addAt(T value, int position) {
+        if (position < 0 || position > size()) {
+            throw new IndexOutOfBoundsException("Posición inválida: " + position);
+        }
+
         NodeLinkedList<T> nuevoNodo = new NodeLinkedList<>();
         nuevoNodo.value = value;
-        nuevoNodo.next = null;
 
-        NodeLinkedList<T> tempNodeLinkedList = head;
-
-        //en caso de q la poscicion sea 0
-        if(position == 0){
+        if (position == 0) {
             addFirst(value);
-
-        }else{
-            for(int i = 0; i < position-1; i++){
+        } else {
+            NodeLinkedList<T> tempNodeLinkedList = head;
+            for (int i = 0; i < position - 1; i++) {
                 tempNodeLinkedList = tempNodeLinkedList.next;
             }
             nuevoNodo.next = tempNodeLinkedList.next;
             tempNodeLinkedList.next = nuevoNodo;
         }
-
     }
+
+
 
     @Override
     public void addInOrder(T value) {
-//        Node<T> tempNode = head;
-//
-//        Node<T> nuevoNodo = new Node<>();
-//        nuevoNodo.value = value;
-//
-//        if (tempNode.value < nuevoNodo.value){
-//            nuevoNodo.next = tempNode.next;
-//            tempNode.next = nuevoNodo;
-//        }
-//        else{
-//            while (tempNode.next != null){
-//                if(tempNode.next.value < nuevoNodo.value){
-//                    tempNode = tempNode.next;
-//                }
-//                tempNode = tempNode.next; // no se si este va, me marie, creo q no
-//                nuevoNodo.next = tempNode.next;
-//                tempNode.next = nuevoNodo;
-//            }
-//        }
+        NodeLinkedList<T> nuevoNodo = new NodeLinkedList<>();
+        nuevoNodo.value = value;
+
+        // Si la lista está vacía o el nuevo nodo debe ser el primero
+        if (head == null || head.value.compareTo(nuevoNodo.value) > 0) {
+            nuevoNodo.next = head;
+            head = nuevoNodo;
+        } else {
+            NodeLinkedList<T> tempNodeLinkedList = head;
+
+            // Recorrer la lista mientras el siguiente nodo no sea null y su valor sea menor que el valor a insertar
+            while (tempNodeLinkedList.next != null && tempNodeLinkedList.next.value.compareTo(value) < 0) {
+                tempNodeLinkedList = tempNodeLinkedList.next;
+            }
+
+            // Insertar el nuevo nodo después del nodo temporal
+            nuevoNodo.next = tempNodeLinkedList.next;
+            tempNodeLinkedList.next = nuevoNodo;
+        }
     }
+
 
     @Override
     public void imprimir() {
@@ -164,7 +201,8 @@ public class LL<T extends  Comparable<T>> implements Lista<T>{
         listita.remove(1);
 
         //pruebo el get
-        listita.get(2);
+        System.out.println("aver si esto funciona");
+        System.out.println(listita.get(2));
 
         //pruebo el addFirst
         listita.addFirst(7);
