@@ -1,6 +1,6 @@
 import java.util.EmptyStackException;
 
-public class stack<T extends Comparable<T>> implements MyStack<T>{
+public class Stack<T extends Comparable<T>> implements MyStack<T>{
 
     public Node <T> head;
     @Override
@@ -8,33 +8,26 @@ public class stack<T extends Comparable<T>> implements MyStack<T>{
         if(isEmpty()){
             throw new EmptyStackException();
         }
-        else{
-            head = head.next;
-        }
-
+        head = head.next;
     }
 
     @Override
     public T top() throws EmptyStackException {
         if(isEmpty()){
-//            throw new EmptyStackException();
-            System.out.println("esta vacia master");
-
-        } else if (head != null) {
-            return head.data;
+            throw new EmptyStackException();
         }
-        return null;
+        return head.data;
     }
+
 
     @Override
     public void push(T element) {
-        Node<T> nuevoNodo = new Node<>();
-        nuevoNodo.data = element;
+        Node<T> nuevoNodo = new Node<>(element);
 
         nuevoNodo.next = head;
         head = nuevoNodo;
-
     }
+
 
     @Override
     public boolean isEmpty() {
@@ -43,11 +36,9 @@ public class stack<T extends Comparable<T>> implements MyStack<T>{
 
     @Override
     public void makeEmpty() {
-        while (head !=null){
-            pop();
-        }
-
+        head = null;
     }
+
 
     @Override
     public void imprimir() {
@@ -65,7 +56,7 @@ public class stack<T extends Comparable<T>> implements MyStack<T>{
     //aca arranca el main
 
     public static void main(String[] args){
-        stack<Integer> miStack = new stack<>();
+        Stack<Integer> miStack = new Stack<>();
 
         System.out.println("mi lista esta vacia? "+ miStack.isEmpty());
         System.out.println("el primer valor es " +miStack.top());
