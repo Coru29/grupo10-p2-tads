@@ -5,37 +5,40 @@ public class Queue<T extends Comparable<T>> implements MyQueue<T>{
 
     @Override
     public void enqueue(T element) {
-        Node<T> nuevoNodeo = new Node<>();
-        nuevoNodeo.data = element;
-        nuevoNodeo.next = null;
+        Node<T> newNode = new Node<>(element, 0); 
 
-        if(head_front == null & tail_rear == null){
-            head_front = tail_rear = nuevoNodeo;
+        if (head_front == null && tail_rear == null) {
+            head_front = tail_rear = newNode;
             return;
         }
 
-        tail_rear.next = nuevoNodeo;
-        tail_rear= nuevoNodeo;
-
+        tail_rear.next = newNode;
+        tail_rear = newNode;
     }
+
+
 
     @Override
-    public void dequeue() {
+    public T dequeue() {
+        if (head_front == null) return null; // Si la cola está vacía, devolvemos null
 
-        if (head_front == null) return; //en el caso de q la cola este vacia
+        T value = head_front.data; // Guardamos el valor que vamos a devolver
 
-        if(head_front == tail_rear){ //en el caso que solo haya un elemento
+        if(head_front == tail_rear){ // Si solo hay un elemento
             head_front = tail_rear = null;
+        } else {
+            head_front = head_front.next;
+        }
 
-        }else head_front = head_front.next;
-
-
+        return value; // Devolvemos el valor
     }
+
 
     @Override
     public boolean isEmpty() {
-        return (head_front == null || tail_rear == null);
+        return (head_front == null && tail_rear == null);
     }
+
 
     @Override
     public void imprimir() {
@@ -47,6 +50,39 @@ public class Queue<T extends Comparable<T>> implements MyQueue<T>{
         }
         System.out.println(temporaryNode.data);
     }
+
+    @Override
+    public void enqueueWithPriority(T element, int priority) {
+        Node<T> newNode = new Node<>(element, priority);
+
+        // Si la cola está vacía, el nuevo nodo es tanto la cabeza como la cola
+        if (isEmpty()) {
+            head_front = tail_rear = newNode;
+            return;
+        }
+
+        // Si la prioridad del nuevo nodo es mayor que la cabeza, se convierte en la nueva cabeza
+        if (head_front.priority < priority) {
+            newNode.next = head_front;
+            head_front = newNode;
+        } else {
+            Node<T> current = head_front;
+
+            // Busca el lugar correcto en la cola y añade el nodo
+            while (current.next != null && current.next.priority >= priority) {
+                current = current.next;
+            }
+
+            newNode.next = current.next;
+            current.next = newNode;
+
+            // Si el nodo se añade al final de la cola, actualizar la cola
+            if (current == tail_rear) {
+                tail_rear = newNode;
+            }
+        }
+    }
+
 
     // -----  ------  -----  ------  -----  ------  -----  ------  -----  ------  -----  ------
     //aca arranca el main
